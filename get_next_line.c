@@ -63,6 +63,8 @@ int	get_next_line(int fd, char **line)
 	tmp = 0;
 	ret = 1;
 	i = BUFFER_SIZE;
+	if (fd < 0 || !line || BUFFER_SIZE < 1 || read(fd, NULL, 0) == -1)
+		return (-1);
 	printf("%s\n", *line);
 	while ((i == BUFFER_SIZE || buf[i] != '\n') && ret > 0)
 	{
