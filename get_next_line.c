@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 17:54:08 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/12 17:59:53 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/11/13 17:57:57 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-void		*ft_free_tabtab(char **s)
+void				*ft_free_tabtab(char **s)
 {
 	if (s == NULL)
 		return (NULL);
@@ -28,7 +28,7 @@ void		*ft_free_tabtab(char **s)
 	return (s);
 }
 
-void	*ft_memmove(void *dst, const void *src, size_t n)
+void				*ft_memmove(void *dst, const void *src, size_t n)
 {
 	if (src < dst && src + n > dst)
 	{
@@ -42,7 +42,7 @@ void	*ft_memmove(void *dst, const void *src, size_t n)
 	return (ft_memcpy(dst, src, n));
 }
 
-static char			*ft_buffer(const int fd, char *val, int *ret)
+char				*ft_buffer(const int fd, char *val, int *ret)
 {
 	char			buf[BUFFER_SIZE + 1];
 	char			*tmp;
@@ -61,14 +61,15 @@ static char			*ft_buffer(const int fd, char *val, int *ret)
 	return (val);
 }
 
-int	get_next_line(int fd, char **line)
+int					get_next_line(int fd, char **line)
 {
 	char *str;
 	static char *val;
 	int ret;
+	char			buf[2];
 
 	str = 0;
-	if (fd < 0 || !line)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (-1);
 	if (!val)
 		val = ft_strdup("");
@@ -82,33 +83,35 @@ int	get_next_line(int fd, char **line)
 			if (!line)
 				return (-1);
 			ft_memmove(val, str, ft_strlen(str) + 1);
+			if (!read(fd, buf, 2))
+				return (0);
 			return (1);
 		}
 		val = ft_buffer(fd, val, &ret);
-//		printf("val ||||| %s\n", val);
 	}
 	if (ret == 0)
-		*line = ft_strdup(val);
+		*line = ft_strdup(val - 1);
 	return (ret);
 }
 
-/* int		main(int ac, char **av)
+int  main(int argc, char **argv)
 {
-	int		fd;
-	int		ret;
-	int		i;
-	char	*line;
-
-	fd = open(av[1], O_RDONLY);
-	line = NULL;
-	i = 0;
-	while ((ret = get_next_line(fd, &line)) > 0)
-	{
-		printf("final : ret %d -> line  [%s]\n ||||||||||||||||||||||||||| \n\n", ret, line);
-		i++;
-	}
-	close(fd);
-	free(line);
-	return (0);
+    int     fd;
+    char    *line;
+    int     s;
+    char    *str;
+    line = NULL;
+    line = malloc(sizeof(char));
+    (void)argc;
+    fd = (open(argv[1], O_RDONLY));
+    //s = ft_find_line(fd, str);
+    while ((s = get_next_line(fd, &line)) != 0)
+    {
+        printf("%d %s\n||||||||||||||||||||||||||||||||\n", s, line);
+    }
+    printf("%d %s\n||||||||||||||||||||||||||||||||\n", s, line);
+    //printf("%d\n", s);
+    close(fd);
+    free(line);
+    return (0);
 }
-*/
