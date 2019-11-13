@@ -87,6 +87,8 @@ int					get_next_line(int fd, char **line)
 				return (0);
 			return (1);
 		}
+		else
+			return (0);
 		val = ft_buffer(fd, val, &ret);
 	}
 	if (ret == 0)
