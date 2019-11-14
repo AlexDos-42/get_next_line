@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 17:54:08 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/13 17:57:57 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/11/14 18:54:33 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,16 @@ char				*ft_buffer(const int fd, char *val, int *ret)
 		buf[*ret] = '\n';
 		buf[*ret + 1] = '\0';
 	}
+//	else if (val != NULL && *ret == 0 && val[ft_strlen(val) - 1] != '\n')
+//	{
+//		buf[0] = '\n';
+//		buf[1] = '\0';
+//	}
 	else
 		buf[*ret] = '\0';
+
 	tmp = val;
+
 	val = ft_strjoin(val, buf);
 	ft_free_tabtab(&tmp);
 	return (val);
@@ -66,16 +73,16 @@ int					get_next_line(int fd, char **line)
 	char *str;
 	static char *val;
 	int ret;
-	char			buf[2];
 
 	str = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || !line)
 		return (-1);
 	if (!val)
 		val = ft_strdup("");
 	ret = 1;
 	while (ret > 0)
 	{
+		val = ft_buffer(fd, val, &ret );
 		if ((str = ft_strchr(val, '\n')) != NULL)
 		{
 			*str++ = '\0';
@@ -83,16 +90,14 @@ int					get_next_line(int fd, char **line)
 			if (!line)
 				return (-1);
 			ft_memmove(val, str, ft_strlen(str) + 1);
-			if (!read(fd, buf, 2))
-				return (0);
 			return (1);
 		}
-		else
-			return (0);
-		val = ft_buffer(fd, val, &ret);
 	}
 	if (ret == 0)
-		*line = ft_strdup(val - 1);
+	{
+		*line = ft_strdup(val);
+		free(val);
+	}
 	return (ret);
 }
 
@@ -111,7 +116,7 @@ int  main(int argc, char **argv)
     {
         printf("%d %s\n||||||||||||||||||||||||||||||||\n", s, line);
     }
-    printf("%d %s\n||||||||||||||||||||||||||||||||\n", s, line);
+//    printf("%d %s\n||||||||||||||||||||||||||||||||\n", s, line);
     //printf("%d\n", s);
     close(fd);
     free(line);
