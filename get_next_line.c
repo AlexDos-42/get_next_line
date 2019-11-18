@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 17:54:08 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/14 18:54:33 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/11/18 19:10:16 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,91 +16,109 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-void				*ft_free_tabtab(char **s)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	if (s == NULL)
+	char		*str;
+	size_t		i;
+	size_t		size_len;
+
+	i = 0;
+	if (!s)
+		return (0);
+	if (start > (unsigned int)ft_strlen(s))
+		return (ft_calloc(1, sizeof(char)));
+	if (!(str = malloc(sizeof(char) * (len + 1))))
 		return (NULL);
-	if (*s != NULL)
+	size_len = ft_strlen(s);
+	if (start < size_len)
 	{
-		free(*s);
-		*s = NULL;
-	}
-	return (s);
-}
-
-void				*ft_memmove(void *dst, const void *src, size_t n)
-{
-	if (src < dst && src + n > dst)
-	{
-		while (n > 0)
+		while (i < len)
 		{
-			n--;
-			((char*)dst)[n] = ((char*)src)[n];
+			str[i] = s[start];
+			i++;
+			start++;
 		}
-		return (dst + n);
 	}
-	return (ft_memcpy(dst, src, n));
+	str[i] = '\0';
+	return (str);
 }
 
-char				*ft_buffer(const int fd, char *val, int *ret)
+void	*ft_calloc(size_t count, size_t size)
 {
-	char			buf[BUFFER_SIZE + 1];
+	void	*str;
+
+	if (count == 0 || size == 0)
+	{
+		size = 1;
+		count = 1;
+	}
+	if (!(str = malloc(size * count)))
+		return (NULL);
+	if (size!= 0)
+	{
+		while (size--)
+			((unsigned char *)str)[size] = '\0';
+	}
+	return (str);
+}
+
+void	ft_bzero(void *str, size_t n)
+{
+	char *tab;
+
+	tab = str;
+	while (n)
+	{
+		tab[--n] = '\0';
+	}
+}
+
+int             get_next_line(int fd, char **line)
+{
+    char            *buffer;
+    int             ret;
+    int             i;
+    static char     *stock;
 	char			*tmp;
 
-	*ret = read(fd, buf, BUFFER_SIZE);
-	if (buf[*ret - 1] != '\n' && *ret < BUFFER_SIZE && *ret > 0)
-	{
-		buf[*ret] = '\n';
-		buf[*ret + 1] = '\0';
-	}
-//	else if (val != NULL && *ret == 0 && val[ft_strlen(val) - 1] != '\n')
-//	{
-//		buf[0] = '\n';
-//		buf[1] = '\0';
-//	}
-	else
-		buf[*ret] = '\0';
-
-	tmp = val;
-
-	val = ft_strjoin(val, buf);
-	ft_free_tabtab(&tmp);
-	return (val);
+    if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0 || !line || !(buffer = (char *)malloc(sizeof(char ) * (BUFFER_SIZE + 1))))
+        return (-1);
+	ft_bzero(buffer, BUFFER_SIZE + 1); 
+    if (!stock)
+        stock = ft_calloc(0,0);
+    while (!ft_strchr(buffer, '\n') && (ret = read(fd, buffer, BUFFER_SIZE)))
+    {
+        buffer[ret] = '\0';
+        tmp = ft_strjoin(stock, buffer);
+		free(*stock);
+		stock = tmp;
+    }
+	printf("ret  %d\n", ret);
+	free(buffer);
+    i = 0;
+	while (stock[i] && stock[i] != '\n')
+        i++;
+    *line = ft_substr(stock, 0, i);
+    stock = ft_strdup(stock + i + 1);
+	return (ret > 0 ? 1 : 0);
 }
-
-int					get_next_line(int fd, char **line)
+/*
+int			main(int argc, char **argv)
 {
-	char *str;
-	static char *val;
-	int ret;
+	char	*line;
+	int		fd;
+	int i = 0 ;
 
-	str = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0 || !line)
-		return (-1);
-	if (!val)
-		val = ft_strdup("");
-	ret = 1;
-	while (ret > 0)
+	(void)argc;
+	fd = open(argv[1], O_RDONLY);
+	while (get_next_line(fd, &line) > 0)
 	{
-		val = ft_buffer(fd, val, &ret );
-		if ((str = ft_strchr(val, '\n')) != NULL)
-		{
-			*str++ = '\0';
-			*line = ft_strdup(val);
-			if (!line)
-				return (-1);
-			ft_memmove(val, str, ft_strlen(str) + 1);
-			return (1);
-		}
+		printf("%d  %s\n", i++, line);
+		free(line);
 	}
-	if (ret == 0)
-	{
-		*line = ft_strdup(val);
-		free(val);
-	}
-	return (ret);
+	return (0);
 }
-
+*/
 int  main(int argc, char **argv)
 {
     int     fd;
@@ -116,9 +134,36 @@ int  main(int argc, char **argv)
     {
         printf("%d %s\n||||||||||||||||||||||||||||||||\n", s, line);
     }
-//    printf("%d %s\n||||||||||||||||||||||||||||||||\n", s, line);
     //printf("%d\n", s);
     close(fd);
     free(line);
     return (0);
 }
+/*
+int        main(int argc, char **argv)
+{
+    int        fd;
+    char    *line;
+    int        i;
+    int ret;
+    if (argc != 2)
+        return (0);
+    i = 0;
+    (void)argc;
+    //fd = 0;
+    fd = open((argv[1]), O_RDONLY);
+    while ((ret = get_next_line(fd, &line)))
+    {
+        printf("\n\n = = = = = > GNL : line = |%s|\n", line);
+        printf(" = = = = = > GNL : ret = %d\n\n\n", ret);
+        free(line);
+    }
+    if (ret == 0)
+    {
+        printf("\n\n = = = = = > GNL : line = |%s|\n", line);
+        printf(" = = = = = > GNL : ret = %d\n\n\n", ret);
+        free(line);
+    }
+    system("leaks a.out");
+    return (0);
+}*/

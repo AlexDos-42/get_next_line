@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/09 13:10:28 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/12 17:54:18 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/11/18 15:25:51 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@ int			get_next_line(int fd, char **line);
 char		*ft_strdup(const char *src);
 void		*ft_memcpy(void *dst, const void *src, size_t n);
 char		*ft_strchr(const char *s, int c);
+void	    *ft_calloc(size_t count, size_t size);
 
 #endif
