@@ -94,3 +94,28 @@ return (0);
    close(fd);
    return (0);
    }
+
+int             main(int ac, char **av)
+{
+        int             fd;
+        int             ret;
+        char    *line;
+        int i;
+
+        i = 1;
+        while (i++ < ac)
+        {
+                av++;
+                if ((fd = open(*av, O_RDONLY)) < 0)
+                        fd = 0;
+                while ((ret = (get_next_line(fd, &line))) == 1)
+                {
+                        printf("line  => %s\n", line);
+                        free(line);
+                        printf("ret 1 => %d\n", ret);
+                }
+                free(line);
+                        printf("ret f => %d\n", ret);
+        }
+        return (0);
+}
