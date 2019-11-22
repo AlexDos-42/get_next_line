@@ -12,11 +12,6 @@
 
 #include "get_next_line.h"
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
-
 static char			*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char			*str;
@@ -55,15 +50,6 @@ static void			*ft_calloc(size_t count, size_t size)
 			((unsigned char *)str)[size] = '\0';
 	}
 	return (str);
-}
-
-static void			ft_bzero(void *str, size_t n)
-{
-	char	*tab;
-
-	tab = str;
-	while (n)
-		tab[--n] = '\0';
 }
 
 int					ft_read(int fd, char *buffer, char *stock[fd])
