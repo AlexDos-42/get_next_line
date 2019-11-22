@@ -12,6 +12,15 @@
 
 #include "get_next_line.h"
 
+static int			ft_exit(char *buffer, char *stock)
+{
+	if (buffer)
+		free(buffer);
+	if (stock)
+		free(stock);
+	return (-1);
+}
+
 static char			*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char			*str;
@@ -83,19 +92,19 @@ int					get_next_line(int fd, char **line)
 
 	if ((i = 0) || fd < 0 || fd > 10240 || BUFFER_SIZE <= 0 || !line
 		|| !(buffer = (char *)malloc(sizeof(char ) * (BUFFER_SIZE + 1))))
-		return (-1);
+		return (ft_exit);
 	ft_bzero(buffer, BUFFER_SIZE + 1);
 	if (!stock[fd])
 		stock[fd] = ft_calloc(0, 0);
 	if ((ret = ft_read(fd, buffer, stock)) == -1)
-		return (-1);
+		return (ft_exit);
 	while (stock[fd][i] && stock[fd][i] != '\n')
 		i++;
 	ret = ((stock)[fd][i] == '\n' ? 1 : 0);
 	if (!(*line = ft_substr(stock[fd], 0, i)))
-		return (-1);
+		return (ft_exit);
 	if (!(tmp = ft_strdup(stock[fd][i] ? stock[fd] + i + 1 : stock[fd] + i)))
-		return (-1);
+		return (ft_exit);
 	free(stock[fd]);
 	stock[fd] = tmp;
 	return (ret);
