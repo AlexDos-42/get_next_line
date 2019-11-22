@@ -52,6 +52,15 @@ char		*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
+void			ft_bzero(void *str, size_t n)
+{
+	char	*tab;
+
+	tab = str;
+	while (n)
+		tab[--n] = '\0';
+}
+
 char		*ft_strchr(const char *s, int c)
 {
 	int		i;
