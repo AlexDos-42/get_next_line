@@ -57,15 +57,6 @@ static void			*ft_calloc(size_t count, size_t size)
 	return (str);
 }
 
-static void			ft_bzero(void *str, size_t n)
-{
-	char	*tab;
-
-	tab = str;
-	while (n)
-		tab[--n] = '\0';
-}
-
 int					ft_read(int fd, char *buffer, char *stock[fd])
 {
 	int		ret;
