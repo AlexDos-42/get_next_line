@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 17:54:08 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/29 14:34:53 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/11/29 15:18:39 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,9 @@ int					get_next_line(int fd, char **line)
 	static char	*stock[1024];
 	char		*tmp;
 
+	buffer = NULL;
 	if ((i = 0) || fd < 0 || fd > 1024 || BUFFER_SIZE < 1 || !line
-		   || (!(buffer = ft_calloc((sizeof(char)), (BUFFER_SIZE + 1)))))
+		|| (!(buffer = ft_calloc((sizeof(char)), (BUFFER_SIZE + 1)))))
 		return (ft_exit(buffer, stock[fd]));
 	if (!stock[fd])
 		stock[fd] = ft_calloc(0, 0);

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/09 13:10:28 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/19 18:24:43 by alesanto         ###   ########.fr       */
+/*   Created: 2019/11/29 15:07:25 by alesanto          #+#    #+#             */
+/*   Updated: 2019/11/29 15:07:39 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -28,6 +28,5 @@ char		*ft_strjoin(char const *s1, char const *s2);
 int			get_next_line(int fd, char **line);
 char		*ft_strdup(const char *src);
 char		*ft_strchr(const char *s, int c);
-void			ft_bzero(void *str, size_t n);
 
 #endif

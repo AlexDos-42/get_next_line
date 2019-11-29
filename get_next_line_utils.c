@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 18:22:41 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/19 18:30:18 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/11/29 15:13:07 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,6 @@ char		*ft_strjoin(char const *s1, char const *s2)
 	if (s1)
 		free((char*)s1);
 	return (str);
-}
-
-void			ft_bzero(void *str, size_t n)
-{
-	char	*tab;
-
-	tab = str;
-	while (n)
-		tab[--n] = '\0';
 }
 
 char		*ft_strchr(const char *s, int c)
