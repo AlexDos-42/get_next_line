@@ -33,7 +33,7 @@ static char			*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t			i;
 
 	i = 0;
-	if (!s)
+	if (!s || !len)
 		return (0);
 	if (start > (unsigned int)ft_strlen(s))
 		return (NULL);
