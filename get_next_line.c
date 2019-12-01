@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 17:54:08 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/29 15:18:39 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/12/01 12:49:20 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ static int			ft_exit(char *buffer, char *stock)
 {
 	if (buffer)
 	{
-		buffer = NULL;
 		free(buffer);
+		buffer = NULL;
 	}
 	if (stock)
 	{
-		stock = NULL;
 		free(stock);
+		stock = NULL;
 	}
 	return (-1);
 }
@@ -33,7 +33,7 @@ static char			*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t			i;
 
 	i = 0;
-	if (!s || !len)
+	if (!s)
 		return (0);
 	if (start > (unsigned int)ft_strlen(s))
 		return (NULL);
