@@ -1,16 +1,29 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 17:54:08 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/20 12:16:52 by alesanto         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
+
+static int			ft_exit(char **buffer, char **stock, int ret)
+{
+	if (ret >= 0 && (*buffer || *stock))
+	{
+		if (*buffer)
+			free(*buffer);
+		if (ret == 0 && *stock)
+			free(*stock);
+	}
+	if (ret == -1)
+	{
+		if (*buffer)
+		{
+			free(*buffer);
+			*buffer = NULL;
+		}
+		if (*stock)
+		{
+			free(*stock);
+			*stock = NULL;
+		}
+	}
+	return (ret);
+}
 
 static char			*ft_substr(char const *s, unsigned int start, size_t len)
 {
@@ -19,11 +32,11 @@ static char			*ft_substr(char const *s, unsigned int start, size_t len)
 
 	i = 0;
 	if (!s)
-		return (0);
+		return (-1);
 	if (start > (unsigned int)ft_strlen(s))
-		return (NULL);
+		return (-1);
 	if (!(str = malloc(sizeof(char) * (len + 1))))
-		return (NULL);
+		return (-1);
 	while (i < len && s[start + i] != '\0')
 	{
 		str[i] = s[start + i];
@@ -52,16 +65,7 @@ static void			*ft_calloc(size_t count, size_t size)
 	return (str);
 }
 
-static void			ft_bzero(void *str, size_t n)
-{
-	char	*tab;
-
-	tab = str;
-	while (n)
-		tab[--n] = '\0';
-}
-
-static int			ft_read(int fd, char *buffer, char *stock[fd])
+int					ft_read(int fd, char *buffer, char *stock[fd])
 {
 	int		ret;
 	char	*tmp;
@@ -69,10 +73,7 @@ static int			ft_read(int fd, char *buffer, char *stock[fd])
 	while (!ft_strchr(buffer, '\n') && (ret = read(fd, buffer, BUFFER_SIZE)))
 	{
 		if (ret == -1)
-		{
-			free(buffer);
 			return (-1);
-		}
 		buffer[ret] = '\0';
 		if (!(tmp = ft_strjoin(stock[fd], buffer)))
 			return (-1);
@@ -87,25 +88,25 @@ int					get_next_line(int fd, char **line)
 	char		*buffer;
 	int			ret;
 	int			i;
-	static char	*stock[10240];
+	static char	*stock[1024];
 	char		*tmp;
 
-	if ((i = 0) || fd < 0 || fd > 10240 || BUFFER_SIZE <= 0 || !line
-		|| !(buffer = (char *)malloc(sizeof(char ) * (BUFFER_SIZE + 1))))
-		return (-1);
-	ft_bzero(buffer, BUFFER_SIZE + 1);
+	if ((i = 0) || fd < 0 || fd > 1024 || BUFFER_SIZE < 1 || !line
+			|| (!(buffer = ft_calloc((sizeof(char)), (BUFFER_SIZE + 1)))))
+		return (ft_exit(&buffer, &stock[fd], -1));
 	if (!stock[fd])
-		stock[fd] = ft_calloc(0, 0);
+		if (!(stock[fd] = ft_calloc(0, 0)))
+			return(ft_exit(&buffer, &stock[fd], -1));
 	if ((ret = ft_read(fd, buffer, stock)) == -1)
-		return (-1);
+		return (ft_exit(&buffer, &stock[fd], -1));
 	while (stock[fd][i] && stock[fd][i] != '\n')
 		i++;
 	ret = ((stock)[fd][i] == '\n' ? 1 : 0);
-	if (!(*line = ft_substr(stock[fd], 0, i)))
-		return (-1);
+	if (*line = ft_substr(stock[fd], 0, i) == -1)
+		return (ft_exit(&buffer, &stock[fd], -1));
 	if (!(tmp = ft_strdup(stock[fd][i] ? stock[fd] + i + 1 : stock[fd] + i)))
-		return (-1);
+		return (ft_exit(&buffer, &stock[fd], -1));
 	free(stock[fd]);
 	stock[fd] = tmp;
-	return (ret);
+	return (ft_exit(&buffer, &stock[fd], ret));
 }
