@@ -10,21 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
-static int			ft_exit(char *buffer, char *stock)
+static int				ft_exit(char **buffer, char **stock, int ret)
 {
-	if (buffer)
+	if (ret >= 0 && (*buffer || *stock))
 	{
-		buffer = NULL;
-		free(buffer);
+		if (ret == 0 && *stock)
+			free(*stock);
 	}
-	if (stock)
+	if (ret == -1)
 	{
-		stock = NULL;
-		free(stock);
+		if (!*buffer)
+			free(*buffer);
+		if (*stock)
+			free(*stock);
 	}
-	return (-1);
+	return (ret);
 }
 
 static char			*ft_substr(char const *s, unsigned int start, size_t len)
@@ -33,8 +35,8 @@ static char			*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t			i;
 
 	i = 0;
-	if (!s)
-		return (0);
+	if (!s || !len)
+		return (NULL);
 	if (start > (unsigned int)ft_strlen(s))
 		return (NULL);
 	if (!(str = malloc(sizeof(char) * (len + 1))))
@@ -77,8 +79,7 @@ int					ft_read(int fd, char *buffer, char *stock[fd])
 		if (ret == -1)
 			return (-1);
 		buffer[ret] = '\0';
-		if (!(tmp = ft_strjoin(stock[fd], buffer)))
-			return (-1);
+		tmp = ft_strjoin(stock[fd], buffer);
 		stock[fd] = tmp;
 	}
 	free(buffer);
@@ -93,22 +94,20 @@ int					get_next_line(int fd, char **line)
 	static char	*stock[1024];
 	char		*tmp;
 
-	buffer = NULL;
 	if ((i = 0) || fd < 0 || fd > 1024 || BUFFER_SIZE < 1 || !line
-		|| (!(buffer = ft_calloc((sizeof(char)), (BUFFER_SIZE + 1)))))
-		return (ft_exit(buffer, stock[fd]));
+		|| (!(buffer = (char *)ft_calloc((sizeof(char)), (BUFFER_SIZE + 1)))))
+		return (ft_exit(&buffer, &stock[fd], -1));
 	if (!stock[fd])
-		stock[fd] = ft_calloc(0, 0);
+		stock[fd] = (char *)ft_calloc(0, 0);
 	if ((ret = ft_read(fd, buffer, stock)) == -1)
-		return (ft_exit(buffer, stock[fd]));
+		return (ft_exit(&buffer, &stock[fd], -1));
 	while (stock[fd][i] && stock[fd][i] != '\n')
 		i++;
-	ret = ((stock)[fd][i] == '\n' ? 1 : 0);
-	if (!(*line = ft_substr(stock[fd], 0, i)))
-		return (ft_exit(buffer, stock[fd]));
-	if (!(tmp = ft_strdup(stock[fd][i] ? stock[fd] + i + 1 : stock[fd] + i)))
-		return (ft_exit(buffer, stock[fd]));
+	*line = ft_substr(stock[fd], 0, i);
+	tmp = stock[fd][i] ? ft_strdup(stock[fd] + i + 1) : NULL;
 	free(stock[fd]);
 	stock[fd] = tmp;
-	return (ret);
+	if (ret == 0 && stock[fd] == NULL)
+		return (ft_exit(&buffer, &stock[fd], 0));
+	return (ft_exit(&buffer, &stock[fd], 1));
 }
