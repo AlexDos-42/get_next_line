@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 18:22:41 by alesanto          #+#    #+#             */
-/*   Updated: 2019/11/29 15:13:07 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/12/07 12:57:49 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,20 @@ char		*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
-char		*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
-	int		i;
+	int i;
 
 	i = 0;
-	if (!s[i])
-		return (NULL);
-	while (s[i] != c)
+	while (s[i] != '\0')
 	{
-		if (!s[i])
-			return (NULL);
+		if (s[i] == c)
+			return ((char*)&s[i]);
 		i++;
 	}
-	return ((char *)s + i);
+	if (s[i] == c)
+		return ((char*)&s[i]);
+	return (NULL);
 }
 
 char		*ft_strdup(const char *src)
@@ -74,7 +74,7 @@ char		*ft_strdup(const char *src)
 	char	*dest;
 
 	i = 0;
-	if (!(dest = (char *)malloc(sizeof(char) * (ft_strlen(src) + 1))))
+	if (!(dest = (char *)malloc(ft_strlen(src) * sizeof(char) + 1)))
 		return (0);
 	while (src[i])
 	{
