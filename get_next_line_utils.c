@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 18:22:41 by alesanto          #+#    #+#             */
-/*   Updated: 2019/12/07 12:57:49 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/12/07 13:16:11 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char		*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
-char	*ft_strchr(const char *s, int c)
+char		*ft_strchr(const char *s, int c)
 {
 	int i;
 

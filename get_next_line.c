@@ -6,7 +6,7 @@
 /*   By: alesanto <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 17:54:08 by alesanto          #+#    #+#             */
-/*   Updated: 2019/12/07 13:10:03 by alesanto         ###   ########.fr       */
+/*   Updated: 2019/12/07 13:15:44 by alesanto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ int					ft_read(int fd, char *buffer, char **stock)
 {
 	int		ret;
 
-	while (!ft_strchr(stock[fd], '\n') && (ret = read(fd, buffer, BUFFER_SIZE)) > 0)
+	while (!ft_strchr(stock[fd], '\n') &&
+		(ret = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		buffer[ret] = '\0';
 		stock[fd] = ft_strjoin(stock[fd], buffer);
